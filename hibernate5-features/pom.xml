@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.osmman.fuse.features</groupId>
+	<artifactId>hibernate5</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>Hibernate 5 features</name>
+	<description>Karaf features for Hibernate 5</description>
+	<packaging>pom</packaging>
+
+	<properties>
+		<hibernate.version>5.0.11.Final-redhat-1</hibernate.version>
+		<hibernate.osgi.version>5.0.11.Final</hibernate.osgi.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>build-feature</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/main/feature</directory>
+									<includes>
+										<include>*</include>
+									</includes>
+									<filtering>true</filtering>
+									<targetPath>feature</targetPath>
+								</resource>
+							</resources>
+							<outputDirectory>target</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-artifacts</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>target/feature/feature.xml</file>
+									<classifier>features</classifier>
+									<type>xml</type>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
