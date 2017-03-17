@@ -5,7 +5,7 @@ This example shows how to install drivers and connect to HornetQ server from JBo
 - Run `mvn clean install` to build project.
 - After the build has finished, you have to add features XML
 `features:addurl mvn:com.github.osmman.fuse/hornetq-client/1.0-SNAPSHOT/xml/features`
-- Set connection information into runned HornetQ instance:
+- Set connection information for HornetQ instance:
 ```
 config:edit com.github.osmman.fuse.hornetq
 config:propset hornetq.host localhost
