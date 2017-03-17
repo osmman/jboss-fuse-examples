@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" name="hornetq">
+	<feature name="hornetq-client" version="${hornetq.version}">
+		<feature>wrap</feature>
+		<feature>jms</feature>
+		<feature>transaction</feature>
+		<bundle>mvn:io.netty/netty/3.9.6.Final</bundle>
+		<bundle>mvn:org.jgroups/jgroups/3.4.1.Final</bundle>
+		<bundle>wrap:mvn:org.jboss.logging/jboss-logging/3.1.4.GA-redhat-2</bundle>
+		<bundle>wrap:mvn:org.hornetq/hornetq-commons/${hornetq.version}$Bundle-SymbolicName=hornetq-commons&amp;Fragment-Host=hornetq-core-client</bundle>
+		<bundle>wrap:mvn:org.hornetq/hornetq-core-client/${hornetq.version}$Bundle-SymbolicName=hornetq-core-client</bundle>
+		<bundle>wrap:mvn:org.hornetq/hornetq-jms-client/${hornetq.version}$Bundle-SymbolicName=hornetq-jms-client</bundle>
+		<bundle>wrap:mvn:org.hornetq/hornetq-journal/${hornetq.version}$Bundle-SymbolicName=hornetq-journal</bundle>
+	</feature>
+
+	<feature name="hornetq-cf">
+		<feature version="${hornetq.version}">hornetq-client</feature>
+		<bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle>
+	</feature>
+</features>

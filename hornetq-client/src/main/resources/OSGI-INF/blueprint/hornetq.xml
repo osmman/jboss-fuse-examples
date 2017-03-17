@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint default-activation="eager" xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+		xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<reference id="jtaTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager"/>
+
+	<cm:property-placeholder id="com.github.osmman.fuse.hornetq.placeholder"
+			persistent-id="com.github.osmman.fuse.hornetq">
+		<cm:default-properties>
+			<cm:property name="hornetq.host" value="localhost"/>
+			<cm:property name="hornetq.port" value="5445"/>
+			<cm:property name="hornetq.username" value="admin"/>
+			<cm:property name="hornetq.password" value="password"/>
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<bean id="transportConfiguration" class="org.hornetq.api.core.TransportConfiguration">
+		<argument type="java.lang.String" value="org.hornetq.core.remoting.impl.netty.NettyConnectorFactory"/>
+		<argument>
+			<map key-type="java.lang.String" value-type="java.lang.Object">
+				<entry key="host" value="${hornetq.host}"/>
+				<entry key="port" value="${hornetq.port}"/>
+			</map>
+		</argument>
+	</bean>
+
+	<bean id="xaConnectionFactory" class="org.hornetq.jms.client.HornetQXAConnectionFactory">
+		<argument type="boolean" value="false"/>
+		<argument>
+			<array value-type="org.hornetq.api.core.TransportConfiguration">
+				<ref component-id="transportConfiguration"/>
+			</array>
+		</argument>
+	</bean>
+
+	<!-- XA pool - ensures that the JMS Sessions get enlisted in the global transaction manager -->
+	<bean id="jmsXaPoolConnectionFactory" class="org.apache.activemq.jms.pool.JcaPooledConnectionFactory">
+		<property name="maxConnections" value="1"/>
+		<property name="transactionManager" ref="jtaTxManager"/>
+		<property name="connectionFactory" ref="CF-Wrapper"/>
+		<!-- note we set a unique name for the XA resource" -->
+		<property name="name" value="hornetq-resource"/>
+	</bean>
+
+	<!-- wires ActiveMQ broker and Geronimo transaction manager -->
+	<!--
+		A ResourceManager is needed for every transactional resource in order to
+		recover any outstanding transactions after a crash.
+		It will register with the Aries transaction manager, which then calls
+		recoverResource() on the transactional resource itself.
+	-->
+	<bean id="resourceManager" class="org.apache.activemq.jms.pool.GenericResourceManager"
+			init-method="recoverResource">
+		<property name="transactionManager" ref="jtaTxManager"/>
+		<property name="connectionFactory" ref="CF-Wrapper"/>
+		<property name="resourceName" value="hornetq-resource"/>
+		<property name="userName" value="${hornetq.username}"/>
+		<property name="password" value="${hornetq.password}"/>
+	</bean>
+
+	<bean id="CF-Wrapper" class="org.springframework.jms.connection.xa.UserCredentialsConnectionFactoryAdapterXA">
+		<property name="targetConnectionFactory" ref="xaConnectionFactory"/>
+		<property name="username" value="${hornetq.username}"/>
+		<property name="password" value="${hornetq.password}"/>
+	</bean>
+
+	<service interface="javax.jms.ConnectionFactory" ref="CF-Wrapper">
+		<service-properties>
+			<entry key="name" value="hornetq/ConnectionFactory"/>
+			<entry key="osgi.jndi.service.name" value="hornetq/ConnectionFactory"/>
+		</service-properties>
+	</service>
+
+	<service auto-export="interfaces" ref="jmsXaPoolConnectionFactory">
+		<service-properties>
+			<entry key="name" value="hornetq/XAConnectionFactory"/>
+			<entry key="osgi.jndi.service.name" value="hornetq/XAConnectionFactory"/>
+		</service-properties>
+	</service>
+</blueprint>
