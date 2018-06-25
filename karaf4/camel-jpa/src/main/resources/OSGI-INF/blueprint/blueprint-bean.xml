@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+			http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+	<camelContext id="blueprint-bean-context" xmlns="http://camel.apache.org/schema/blueprint">
+		<route id="insertBook">
+			<from uri="direct:insertBook"/>
+			<to uri="jpa://com.github.osmman.karaf4.entity.Book?usePersist=true"/>
+		</route>
+
+		<!-- Jpa consumer with named query -->
+		<!--<route id="getAllBooks">-->
+			<!--<from uri="jpa://com.github.osmman.karaf4.entity.Book?consumer.namedQuery=getAllBooks"/>-->
+			<!--<to uri="direct:printBooks"/>-->
+		<!--</route>-->
+
+		<route id="getAllBooksQuery">
+			<from uri="jpa://com.github.osmman.karaf4.entity.Book?consumer.nativeQuery=SELECT * FROM books"/>
+			<to uri="direct:printBooks"/>
+		</route>
+
+		<route id="printBooks">
+			<from uri="direct:printBooks"/>
+			<log message="Book: ${body}"/>
+		</route>
+	</camelContext>
+
+</blueprint>
