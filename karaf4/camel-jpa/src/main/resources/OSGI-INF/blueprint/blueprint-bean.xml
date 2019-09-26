@@ -11,13 +11,8 @@
 		</route>
 
 		<!-- Jpa consumer with named query -->
-		<!--<route id="getAllBooks">-->
-			<!--<from uri="jpa://com.github.osmman.karaf4.entity.Book?consumer.namedQuery=getAllBooks"/>-->
-			<!--<to uri="direct:printBooks"/>-->
-		<!--</route>-->
-
-		<route id="getAllBooksQuery">
-			<from uri="jpa://com.github.osmman.karaf4.entity.Book?consumer.nativeQuery=SELECT * FROM books"/>
+		<route id="getAllBooks">
+			<from uri="jpa://com.github.osmman.karaf4.entity.Book?consumer.namedQuery=getAllBooks"/>
 			<to uri="direct:printBooks"/>
 		</route>
 

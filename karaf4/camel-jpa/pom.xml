@@ -7,7 +7,7 @@
 	<groupId>com.github.osmman.karaf4</groupId>
 	<artifactId>camel-jpa</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 
 	<name>A Camel Blueprint Route</name>
 
@@ -18,11 +18,10 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Camel BOM -->
 			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-parent</artifactId>
-				<version>2.20.0</version>
+				<groupId>org.jboss.redhat-fuse</groupId>
+				<artifactId>fuse-karaf-bom</artifactId>
+				<version>7.4.0.fuse-740036-redhat-00002</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -102,7 +101,6 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>3.3.0</version>
 				<extensions>true</extensions>
 				<executions>
 					<execution>

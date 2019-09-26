@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @Table(name = "books")
 @XmlRootElement(name = "book")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NamedQuery(name = "getAllBooks", query = "SELECT b FROM Book b")
 //@NamedNativeQuery(name = "getAllBooks", query = "SELECT * FROM books")
 public class Book implements Serializable {
 
