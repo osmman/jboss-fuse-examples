@@ -21,7 +21,7 @@
 			<dependency>
 				<groupId>org.jboss.redhat-fuse</groupId>
 				<artifactId>fuse-karaf-bom</artifactId>
-				<version>7.4.0.fuse-740036-redhat-00002</version>
+				<version>7.6.0.fuse-760017-redhat-00001</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -115,8 +115,8 @@
 					<instructions>
 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
 						<Import-Package>
-							org.hibernate.proxy,
 							javassist.util.proxy,
+							org.hibernate.proxy,
 							*
 						</Import-Package>
 					</instructions>
